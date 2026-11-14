@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101011">
+  <meta name="description" content="ИмиджЛаб — отдельный зал на час рядом с домом. Оборудование, условия посещения и демо бронирования.">
+  <title>ИмиджЛаб — зал на час</title>
+  <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="room-layout.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="price.js" defer></script>
+  <script src="pilot-metrics.js" defer></script>
+  <script src="tour-entry.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#main">К содержанию</a>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="logo" href="#top" aria-label="ИмиджЛаб — начало"><i aria-hidden="true"></i>Имидж<span>Лаб</span></a>
+      <nav aria-label="Разделы сайта">
+        <a href="#format">Что внутри</a><a href="#price">Цена</a>
+      </nav>
+      <a class="pill nav-cta" href="#booking">Забронировать час <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" id="top" aria-labelledby="hero-title" data-pilot-section="hero">
+      <div class="hero-copy">
+        <p class="kicker"><span class="dot"></span> ГОТОВИМСЯ К ПИЛОТУ</p>
+        <h1 id="hero-title">Зал на час<br><em>рядом с домом</em></h1>
+        <p class="lead">Отдельный тренажёрный зал целиком в твоём распоряжении. Можно заниматься одному, вдвоём или со своим тренером.</p>
+        <dl class="hero-facts">
+          <div><dt>Где</dt><dd>Адрес первой точки объявим перед запуском</dd></div>
+          <div id="hero-price" hidden><dt>Ориентир за час</dt><dd data-price="hour"></dd></div>
+        </dl>
+        <div class="hero-links">
+          <a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a>
+          <small>Сейчас доступно демо</small>
+        </div>
+      </div>
+      <figure class="rig" aria-label="Интерактивная модель штанги">
+        <div class="rig-top"><span><b aria-hidden="true"></b> ДЕМО ШТАНГИ</span><span class="rep"><output id="reps" aria-live="polite">00</output> ПОВТ.</span></div>
+        <canvas id="barbell" aria-hidden="true"></canvas>
+        <div class="rig-bottom">
+          <fieldset class="weights">
+            <legend>Демо-вес</legend>
+            <label><input type="radio" name="weight" value="20"><span>20 кг</span></label>
+            <label><input type="radio" name="weight" value="40" checked><span>40 кг</span></label>
+            <label><input type="radio" name="weight" value="60"><span>60 кг</span></label>
+          </fieldset>
+          <button class="pill lift" id="lift" type="button">Поднять <span aria-hidden="true">↑</span></button>
+        </div>
+      </figure>
+    </section>
+
+    <section class="light" id="how" aria-labelledby="how-title" data-pilot-section="how">
+      <div class="wrap section">
+        <h2 id="how-title">Как это работает</h2>
+        <ol class="steps">
+          <li><div class="step-visual step-calendar" aria-hidden="true"><b>18:00</b><span>19:00</span></div><h3>Выбираешь час</h3><p>Указываешь время начала. Зал целиком закрепляется за твоей бронью.</p></li>
+          <li><div class="step-visual step-keypad" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Открываешь дверь кодом</h3><p>По сценарию пилота код приходит после подтверждения брони и действует на время визита.</p></li>
+          <li><div class="step-visual step-weights" aria-hidden="true"><i></i></div><h3>Тренируешься в своём темпе</h3><p>Приходи один, вдвоём или со своим тренером.</p></li>
+        </ol>
+        <div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div>
+      </div>
+    </section>
+
+    <section class="light inside" id="format" aria-labelledby="format-title" data-pilot-section="inside">
+      <div class="wrap section">
+        <div class="format-heading">
+          <div><h2 id="format-title">Что внутри</h2></div>
+          <p>Капсула площадью около 25 м². На схеме — планируемое оборудование и расстановка.</p>
+        </div>
+        <ul class="equipment-list" aria-label="Планируемое оборудование">
+          <li>Блочный тренажёр для тяг</li><li>Стойка со штангой и скамья</li><li>Стойка с гантелями</li><li>Велотренажёр</li><li>Коврик для разминки</li>
+        </ul>
+        <div class="layout" id="plan">
+          <div class="blueprint" aria-label="Условный план капсулы">
+            <p class="plan-label">ВИД СВЕРХУ · СХЕМА КОНЦЕПЦИИ</p>
+            <div class="room" role="img" aria-label="Вход по центру нижней стены. Если смотреть от входа, блочный тренажёр, стойка, скамья и гантели справа, велотренажёр и коврик слева.">
+              <div class="zone zone-strength"></div>
+              <div class="zone zone-floor"></div>
+              <div class="zone zone-entry"></div>
+              <div class="fixture rack"></div>
+              <div class="fixture bench"></div>
+              <div class="fixture dumbbells"></div>
+              <div class="fixture mat"></div>
+              <div class="fixture cable" title="Блочный тренажёр"></div>
+              <div class="fixture bike" title="Велотренажёр"></div>
+              <div class="door"></div>
+            </div>
+            <p class="plan-entry">↑ Вход</p>
+            <div class="plan-size">площадь модуля ≈ 25 м²</div>
+          </div>
+
+          <div class="zones" aria-label="Зоны капсулы">
+            <button class="zone-button" type="button" data-zone="strength" aria-pressed="true"><span class="zone-index">01</span>Силовая зона<span aria-hidden="true">↗</span></button>
+            <button class="zone-button" type="button" data-zone="floor" aria-pressed="false"><span class="zone-index">02</span>Кардио и разминка<span aria-hidden="true">↗</span></button>
+            <button class="zone-button" type="button" data-zone="entry" aria-pressed="false"><span class="zone-index">03</span>Вход<span aria-hidden="true">↗</span></button>
+            <p id="zone-copy" aria-live="polite">Справа от входа — блочный тренажёр, стойка со скамьёй и гантели.</p>
+          </div>
+        </div>
+      </div>
+    <section class="tour" id="tour" aria-labelledby="tour-title">
+      <div class="tour-stage">
+        <canvas id="tour-scene" aria-hidden="true"></canvas>
+        <div class="tour-shade" aria-hidden="true"></div>
+        <div class="wrap tour-overlay">
+          <div class="tour-top">
+            <p class="kicker"><span class="dot"></span> 3D-МОДЕЛЬ КОНЦЕПЦИИ</p>
+            <a class="quiet" href="#plan">К плану зала <span aria-hidden="true">↘</span></a>
+          </div>
+          <div class="tour-bottom">
+            <h2 id="tour-title">ЗАГЛЯНИ<br>ВНУТРЬ.</h2>
+            <p class="tour-caption">Отдельный вход. Весь зал на время твоей брони.</p>
+            <div class="tour-track" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <div class="wrap inside-action"><div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div></div>
+    </section>
+
+    <section class="wrap section feature-row" id="limits" aria-labelledby="limits-title" data-pilot-section="limits">
+      <h2 id="limits-title">Чего нет</h2>
+      <div><p class="section-copy">Душа нет. По плану зона для переодевания компактная — удобнее прийти в спортивной форме.</p><div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div></div>
+    </section>
+
+    <section class="light" id="price" aria-labelledby="price-title" data-pilot-section="price">
+      <div class="wrap section">
+        <div class="format-heading"><h2 id="price-title">Сколько стоит</h2><p>Расчёт по ориентиру для пилота. Тариф, условия пакета и доплаты объявим перед запуском.</p></div>
+        <dl class="price-grid">
+          <div><dt>Час за весь зал</dt><dd data-price="hour">—</dd></div>
+          <div><dt>Вдвоём, с человека</dt><dd data-price="split">—</dd></div>
+          <div><dt>4 визита в месяц</dt><dd data-price="monthly">—</dd></div>
+        </dl>
+        <p class="section-copy price-note">Четыре визита посчитаны по цене часа. Пакет из 4 часов рассматриваем отдельно, его цена пока открыта.</p>
+        <details class="price-compare">
+          <summary>Сравнить с моим клубом</summary>
+          <div class="compare-inputs">
+            <label>Абонемент в месяц, ₽ <input id="club-fee" type="number" min="0" step="any" inputmode="decimal"></label>
+            <label>Дорога туда и обратно за визит, ₽ <input id="club-travel" type="number" min="0" step="any" inputmode="decimal"></label>
+            <label>Время на дорогу за визит, мин <input id="club-time" type="number" min="0" step="any" inputmode="decimal"></label>
+          </div>
+          <p id="club-comparison" aria-live="polite">Укажи стоимость абонемента для расчёта на четыре визита.</p>
+        </details>
+        <div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div>
+      </div>
+    </section>
+
+    <section class="wrap section feature-row" id="coach" aria-labelledby="coach-title" data-pilot-section="coach">
+      <h2 id="coach-title">С тренером</h2>
+      <div><p class="section-copy">В пилоте можно прийти со своим тренером. Согласуйте время заранее: на выбранный час зал будет в вашем распоряжении.</p>
+        <a class="quiet detail-link" href="trainers.html">Условия для тренеров ↗</a><div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div></div>
+    </section>
+
+    <section class="light" id="help" aria-labelledby="help-title" data-pilot-section="help">
+      <div class="wrap section feature-row">
+        <h2 id="help-title">Если нужна помощь</h2>
+        <div><p class="section-copy">По плану в зале будет кнопка вызова помощи. В пилоте проверим, успевает ли поддержка ответить за 5 минут. Если дверь не открылась и оплаченный визит сорвался, предусмотрен возврат.</p><div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div></div>
+      </div>
+    </section>
+
+    <section class="wrap section feature-row" id="faq" aria-labelledby="faq-title" data-pilot-section="faq">
+      <h2 id="faq-title">Частые вопросы</h2>
+      <div class="faq-list">
+        <details><summary>Есть ли душ?</summary><p>Душа в капсуле нет. Удобнее прийти в спортивной форме.</p></details>
+        <details><summary>Можно ли прийти вдвоём?</summary><p>Да, такой визит предусмотрен. Ориентир на человека при равной оплате — <span data-price="split">—</span> за час.</p></details>
+        <details><summary>Можно ли прийти с ребёнком?</summary><p>Условия для детей и возрастные ограничения объявим перед открытием.</p></details>
+        <details><summary>Как отменить бронь?</summary><p>Сроки отмены и правила возврата будут видны перед оплатой.</p></details>
+        <details><summary>Что если я опоздаю?</summary><p>Бронь рассчитана на выбранный интервал. Точные правила для опозданий опубликуем до запуска.</p></details>
+        <details><summary>Где будут камеры?</summary><p>По плану камеры будут только снаружи. Правила опубликуем до открытия.</p></details>
+        <div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div>
+      </div>
+    </section>
+
+    <section class="light" id="location" aria-labelledby="location-title" data-pilot-section="location">
+      <div class="wrap section feature-row">
+        <h2 id="location-title">Где находится зал</h2>
+        <div><p class="section-copy">Адрес первой точки ещё не объявлен. После выбора площадки здесь появятся карта, ориентир для входа, часы работы и Telegram для связи.</p><div class="block-action"><a class="pill primary" href="#booking">Забронировать час <span aria-hidden="true">↘</span></a></div></div>
+      </div>
+    </section>
+
+    <section class="booking" id="booking" data-pilot-section="booking" aria-labelledby="booking-title">
+      <div class="wrap section booking-grid">
+        <div><p class="kicker">ПОЧАСОВАЯ БРОНЬ</p><h2 id="booking-title">ВЫБЕРИ<br>СВОЙ ЧАС.</h2><p class="booking-lead">Пока пилот готовится, здесь можно попробовать выбрать время. Оплата и реальная бронь появятся после запуска.</p></div>
+        <form class="scheduler" id="scheduler">
+          <div class="schedule-head"><h3>Тренировка на 60 минут</h3><span>ДЕМО</span></div>
+          <fieldset>
+            <legend>Время начала</legend>
+            <div class="times">
+              <label><input type="radio" name="slot" value="08:00"><span>08:00</span></label>
+              <label><input type="radio" name="slot" value="12:00"><span>12:00</span></label>
+              <label><input type="radio" name="slot" value="18:00" checked><span>18:00</span></label>
+              <label><input type="radio" name="slot" value="20:00"><span>20:00</span></label>
+            </div>
+          </fieldset>
+          <p class="schedule-range" id="range" aria-live="polite">18:00–19:00 · 60 мин</p>
+          <button class="pill schedule-submit" type="submit">Подтвердить демо-бронь <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="pilot"><div class="wrap footer-inner"><a class="logo" href="#top"><i aria-hidden="true"></i>Имидж<span>Лаб</span></a><div class="footer-links"><a href="trainers.html">Тренерам</a><a href="venues.html">Площадкам</a><a href="pilot.html">Пилот</a></div></div></footer>
+
+  <dialog id="confirmation" aria-labelledby="confirmation-title">
+    <form method="dialog">
+      <div class="confirmation-check" aria-hidden="true">✓</div>
+      <h2 id="confirmation-title">Демо завершено</h2>
+      <p id="confirmed"></p>
+      <p>Деньги не списаны. Этот интервал не зарезервирован.</p>
+      <button class="pill primary">Готово <span aria-hidden="true">↵</span></button>
+    </form>
+  </dialog>
+</body>
+</html>
