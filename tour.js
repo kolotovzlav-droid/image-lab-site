@@ -14,9 +14,8 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const states = [
     ['ЗАГЛЯНИ', 'ВНУТРЬ.', 'Вход в капсулу. Прокрути, чтобы открыть дверь.'],
-    ['БЛОЧНЫЙ', 'ТРЕНАЖЁР.', 'Сразу справа от входа — регулируемые рукояти для тяги.'],
-    ['СИЛОВАЯ', 'ЗОНА.', 'Дальше справа — стойка со штангой, скамья и гантели.'],
-    ['КАРДИО И', 'РАЗМИНКА.', 'Слева от входа — велотренажёр и коврик.'],
+    ['СИЛОВАЯ', 'ЗОНА.', 'Справа от входа — скамья и гантели.'],
+    ['ЗОНА', 'РАЗМИНКИ.', 'Слева от входа — коврик для разминки.'],
   ];
   const clamp = (value) => Math.max(0, Math.min(1, value));
   const mix = (a, b, t) => a + (b - a) * t;
@@ -54,14 +53,6 @@
     polygon([a, e, k, f], side);
     polygon([b, g, j, c], side);
     polygon([f, g, j, k], front);
-  }
-
-  function circle(x, y, z, radius, color, segments = 20) {
-    const points = Array.from({ length: segments }, (_, index) => {
-      const angle = index * Math.PI * 2 / segments;
-      return [x + Math.cos(angle) * radius, y + Math.sin(angle) * radius, z];
-    });
-    polygon(points, color);
   }
 
   function transform([x, y, z]) {
@@ -119,7 +110,6 @@
   const frames = ['#323831', '#565f50', '#242a24'];
   const upholstery = ['#292d27', '#424a3b', '#1b211c'];
   const steel = ['#626c5d', '#9aab8d', '#394336'];
-  const accent = ['#a7b437', '#ecfd58', '#677323'];
 
   function architecture() {
     const w = roomWidth / 2;
@@ -132,71 +122,37 @@
     polygon([[-w, 0, 0], [-w, 0, d], [-w, h, d], [-w, h, 0]], '#30392f', null, -2);
     polygon([[w, 0, 0], [w, 0, d], [w, h, d], [w, h, 0]], '#374035', null, -2);
 
-    for (let x = -2; x <= 2; x += .5) line([x, .003, 0], [x, .003, d], '#485045', -1);
+    for (let x = -1; x <= 1; x += .5) line([x, .003, 0], [x, .003, d], '#485045', -1);
     for (let z = .25; z < d; z += .5) {
       line([-w, .005, z], [w, .005, z], '#485045', -1);
       line([w - .005, .03, z], [w - .005, h - .08, z], '#495447', -1);
       line([-w + .005, .03, z], [-w + .005, h - .08, z], '#465043', -1);
     }
 
-    for (const x of [-1.52, 1.5]) {
+    for (const x of [-.8, .8]) {
       polygon([[x, h - .016, .15], [x + .055, h - .016, .15], [x + .055, h - .016, d - .17], [x, h - .016, d - .17]], '#e7fab0', null, -1);
     }
-    polygon([[-2.27, 2.2, d - .012], [2.27, 2.2, d - .012], [2.27, 2.24, d - .012], [-2.27, 2.24, d - .012]], '#9ba962', null, -1);
-    for (let x = -1.8; x <= 1.8; x += .45) line([x, .24, d - .014], [x, 2.16, d - .014], '#535f4c', -1);
+    polygon([[-w + .04, 2.2, d - .012], [w - .04, 2.2, d - .012], [w - .04, 2.24, d - .012], [-w + .04, 2.24, d - .012]], '#9ba962', null, -1);
+    for (let x = -1; x <= 1; x += .45) line([x, .24, d - .014], [x, 2.16, d - .014], '#535f4c', -1);
   }
 
-  function drawEquipment(strength, free) {
-    const light = strength > .45 ? accent : steel;
-    const matLight = Math.round(44 + free * 64);
-    const floorColor = 'rgb(' + matLight + ' ' + (matLight + 13) + ' 47)';
-    polygon([[-2.18, .012, 1.1], [-.15, .012, 1.1], [-.15, .012, 5.05], [-2.18, .012, 5.05]], '#222923', strength > .45 ? '#bdc94e' : '#60684d', -1);
-    polygon([[.25, .014, 1.65], [2, .014, 1.65], [2, .014, 4.95], [.25, .014, 4.95]], floorColor, free > .42 ? '#e1f35a' : '#747b59', -1);
-    for (let z = 1.85; z < 4.9; z += .22) line([.31, .022, z], [1.94, .022, z], '#a2ac6937', -1);
-    const { rack, bench, dumbbells, mat, cable, bike } = equipment;
-    const cableLeft = cable.x - cable.width / 2;
-    const cableFront = cable.z - cable.depth / 2;
-    for (const x of [cableLeft, cableLeft + cable.width - .17]) {
-      box(x, .025, cableFront, .17, .09, cable.depth, frames);
-      box(x, .09, cableFront + .46, .17, 2.02, .18, steel);
-      box(x, .10, cableFront + .13, .17, .53, .29, frames);
-    }
-    box(cableLeft, 2.06, cableFront + .46, cable.width, .10, .18, steel);
-    const bikeFront = bike.z - bike.depth / 2;
-    for (const z of [bikeFront + .08, bikeFront + bike.depth - .15]) {
-      box(bike.x - bike.width / 2, .025, z, bike.width, .06, .10, frames);
-    }
-    circle(bike.x, .3, bikeFront + .28, .23, '#333b35');
-    box(bike.x - .075, .1, bikeFront + .27, .15, .10, .75, frames);
-    box(bike.x - .032, .17, bikeFront + .78, .064, .77, .06, steel);
-    box(bike.x - .11, .93, bikeFront + .68, .22, .06, .26, upholstery);
-    box(bike.x - .028, .31, bikeFront + .21, .056, .76, .059, steel);
-    box(bike.x - .23, 1.05, bikeFront + .18, .46, .058, .075, upholstery);
+  function drawEquipment() {
+    const { bench, dumbbells, mat } = equipment;
     box(mat.x - mat.width / 2, .021, mat.z - mat.depth / 2, mat.width, .028, mat.depth, ['#626a44', '#7d8756', '#333b2c']);
-
-    for (const x of [rack.x - rack.width / 2, rack.x + rack.width / 2 - .105]) {
-      box(x, .007, 3.83, .105, 2.19, .11, steel);
-      box(x - .10, .008, 3.26, .30, .105, 1.33, frames);
-      box(x - .018, 1.06, 3.76, .15, .09, .29, light);
+    const benchStart = bench.z - bench.depth / 2;
+    for (const z of [benchStart + .08, benchStart + bench.depth - .15]) {
+      box(bench.x - .19, .035, z, .38, .07, .09, steel);
+      box(bench.x - .03, .095, z, .06, .34, .08, frames);
     }
-    box(-1.93, 2.08, 3.83, 1.45, .1, .11, steel);
-    box(-2.1, 1.15, 3.72, 1.85, .052, .054, steel);
-    for (const x of [-1.91, -1.78, -.57, -.44]) {
-      circle(x, 1.18, 3.75, .185, '#32382c');
-      circle(x, 1.18, 3.728, .155, strength > .45 ? '#b3c046' : '#707d4a');
-      circle(x, 1.18, 3.71, .075, '#32382c');
-    }
-    box(-1.42, .04, 2.13, .11, .45, 1.38, steel);
-    box(-1.62, .04, 2.13, .53, .10, .13, steel);
-    box(-1.62, .04, 3.36, .53, .10, .13, steel);
-    box(bench.x - .22, .465, bench.z - bench.depth / 2, .44, .1, bench.depth, upholstery);
-    box(dumbbells.x - dumbbells.width / 2, .07, dumbbells.z - dumbbells.depth / 2, dumbbells.width, .08, dumbbells.depth, frames);
-    box(dumbbells.x - dumbbells.width / 2, .36, dumbbells.z - dumbbells.depth / 2, dumbbells.width, .07, dumbbells.depth, steel);
-    for (let i = 0; i < 5; i++) {
-      const x = -2.0 + .28 * i;
-      box(x, .43, 4.62, .075, .13, .19, frames);
-      box(x + .16, .43, 4.62, .075, .13, .19, frames);
-      box(x + .07, .475, 4.69, .092, .038, .04, steel);
+    box(bench.x - bench.width / 2, .435, benchStart, bench.width, .085, bench.depth, upholstery);
+    const shelfLeft = dumbbells.x - dumbbells.width / 2;
+    const shelfFront = dumbbells.z - dumbbells.depth / 2;
+    for (const y of [.30, .58]) {
+      box(shelfLeft, y, shelfFront, dumbbells.width, .06, dumbbells.depth, steel);
+      for (let i = 0; i < 3; i++) {
+        const x = shelfLeft + .12 + i * .26;
+        box(x, y + .06, shelfFront + .07, .19, .10, .16, frames);
+      }
     }
   }
 
@@ -221,7 +177,7 @@
     frame(-x, h - .08, x, h, '#879380', -.012);
     frame(-x + .18, 2.48, x - .18, 2.50, '#89967c', -.013);
     for (const side of [-1, 1]) {
-      const x1 = side * 1.7;
+      const x1 = side * x * .72;
       frame(x1, .10, x1 + .024, lintel, '#77816f', -.013);
     }
     frame(-x, -.10, x, 0, '#374034');
@@ -240,14 +196,14 @@
       };
       door(-gap, -slide);
       door(slide, gap);
-      if (slide < .8) {
+      if (slide < gap * .75) {
         frame(-slide - .083, .93, -slide - .06, 1.18, '#ccdd73', -.046);
         frame(slide + .06, .93, slide + .083, 1.18, '#ccdd73', -.046);
       }
     }
-    frame(.5 + gap, .92, .66 + gap, 1.27, '#263127', -.025);
-    frame(.53 + gap, 1.14, .63 + gap, 1.19, '#dcec72', -.031);
-    for (const y of [.34, .42, .5, .58]) frame(-1.91, y, -1.28, y + .012, '#222e24', -.022);
+    frame(.24 + gap, .92, .40 + gap, 1.27, '#263127', -.025);
+    frame(.27 + gap, 1.14, .37 + gap, 1.19, '#dcec72', -.031);
+    for (const y of [.34, .42, .5, .58]) frame(-x + .12, y, -x + .46, y + .012, '#222e24', -.022);
   }
 
   function render() {
@@ -263,11 +219,9 @@
 
     const walk = ease(.24, .74, progress);
     const pan = ease(.65, .92, progress);
-    const strength = ease(.38, .62, progress) * (1 - ease(.76, .94, progress));
-    const free = ease(.72, .95, progress);
     const open = scrolling ? ease(.08, .39, progress) : 1;
 
-    camera = { x: mix(-1.52, -.12, walk) + .32 * pan, y: mix(1.56, 1.15, walk), z: mix(-8.05, .96, walk) };
+    camera = { x: mix(-1.2, 0, walk) + .18 * pan, y: mix(1.56, 1.15, walk), z: mix(-5.6, .25, walk) };
     const swing = mix(.105, -.18, walk) + .46 * pan;
     yaw = { c: Math.cos(swing), s: Math.sin(swing) };
     focal = Math.min(width * (width < 650 ? 1.36 : 1.08), height * 1.22);
@@ -283,15 +237,25 @@
       for (let z = -6; z <= 0; z += .5) line([-8, -.13, z], [8, -.13, z], '#384038', -4);
     }
     architecture();
-    drawEquipment(strength, free);
+    drawEquipment();
     if (camera.z < -.12) entrance(open);
     paint();
+    const preview = document.querySelector('#capsule-preview');
+    if (!preview.dataset.rendered) {
+      preview.width = canvas.width;
+      preview.height = canvas.height;
+      const image = preview.getContext('2d');
+      image.translate(preview.width, 0);
+      image.scale(-1, 1);
+      image.drawImage(canvas, 0, 0);
+      preview.dataset.rendered = 'true';
+    }
 
-    const state = !scrolling ? -1 : progress < .30 ? 0 : progress < .49 ? 1 : progress < .78 ? 2 : 3;
+    const state = !scrolling ? -1 : progress < .43 ? 0 : progress < .76 ? 1 : 2;
     if (state !== lastState || !scrolling) {
       lastState = state;
       const [first, second, copy] = state < 0
-        ? ['ВНУТРИ', 'КАПСУЛЫ.', 'Блочный тренажёр и свободные веса справа, велотренажёр и коврик слева.']
+        ? ['ВНУТРИ', 'КАПСУЛЫ.', 'Скамья и гантели справа, коврик для разминки слева.']
         : states[state];
       title.replaceChildren(first, document.createElement('br'), second);
       if (scrolling) {

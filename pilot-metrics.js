@@ -1,5 +1,5 @@
 (() => {
-  const key = 'imagelab-pilot-metrics-v1';
+  const key = 'parkfit-pilot-metrics-v1';
 
   function read() {
     try { return JSON.parse(localStorage.getItem(key)) ?? {}; }
@@ -9,7 +9,7 @@
   const dashboard = document.querySelector('#pilot-report');
   if (dashboard) {
     const totals = read();
-    for (const [variant, label] of [['plain', 'Без цены'], ['price', 'С ориентиром']]) {
+    for (const [variant, label] of [['plain', 'Без цены'], ['price', 'С ценами']]) {
       const sample = totals[variant] ?? {};
       const visits = sample.visits ?? 0;
       const bookings = sample.bookings ?? 0;
@@ -50,7 +50,7 @@
   record((sample) => { sample.visits += 1; });
 
   document.addEventListener('click', (event) => {
-    if (!booked && event.target.closest('a[href="#booking"]')) {
+    if (!booked && event.target.closest('a[data-booking-link]')) {
       booked = true;
       record((sample) => { sample.bookings += 1; });
     }
