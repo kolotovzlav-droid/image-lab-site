@@ -7,7 +7,7 @@
   <title>Пилот проекта — ParkFit</title>
   <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="style.css?v=parkfit">
-  <script src="pilot-metrics.js?v=parkfit" defer></script>
+  <script src="pilot-metrics.js?v=parkfit-pilot" defer></script>
 </head>
 <body>
   <header class="nav"><div class="wrap nav-inner">
@@ -23,13 +23,22 @@
     <section class="light"><div class="wrap section detail-sections">
       <article><h2>Что проверяем</h2><p>Готовы ли жители платить за час тренировки в отдельном зале рядом с домом.</p></article>
       <article><h2>Два первых экрана</h2><p><a class="quiet" href="./?hero=plain">Без цены ↗</a> · <a class="quiet" href="./?hero=price">С ценами ↗</a></p></article>
-      <article><h2>Как измеряем спрос</h2><p>Сравниваем долю посетителей, которые нажали «Забронировать в Telegram», и долю тех, кто оплатил. Смотрим последний просмотренный блок перед уходом. Вопросы из чата фиксируем по темам и переносим повторяющиеся в FAQ.</p></article>
-      <article><h2>Счётчики этого браузера</h2><p>Данные сохраняются локально. Подтверждение демо учитывается отдельно. Оплаты и повторные брони оцениваются отдельно по данным бота.</p>
-        <div class="report-table"><table><thead><tr><th scope="col">Первый экран</th><th scope="col">Просмотры</th><th scope="col">Нажатия</th><th scope="col">Доля</th><th scope="col">Демо</th></tr></thead><tbody id="pilot-report"></tbody></table></div>
-        <p>Последний увиденный блок, без цены: <span id="blocks-plain">—</span></p>
-        <p>Последний увиденный блок, с ценами: <span id="blocks-price">—</span></p>
+      <article><h2>Как измеряем спрос</h2><p>Конверсию в оплату считаем так: число оплат ÷ число переходов в Telegram-бот × 100%. Отдельно считаем долю посетителей сайта, нажавших кнопку бронирования. Смотрим последний просмотренный блок перед уходом. Вопросы из чата фиксируем по темам и переносим повторяющиеся в FAQ.</p></article>
+      <article>
+        <h2>Результаты пилота</h2>
+        <p>Данные появятся после старта пилота.</p>
+        <details id="pilot-preview" hidden>
+          <summary>Счётчики демо в этом браузере</summary>
+          <p>Здесь учитываются просмотры лендинга, клики по кнопке и завершения демо в этом браузере. Данные об оплатах берутся из бота.</p>
+          <div class="report-table">
+            <table>
+              <thead><tr><th scope="col">Первый экран</th><th scope="col">Просмотры</th><th scope="col">Клики</th><th scope="col">Доля кликов</th><th scope="col">Завершения демо</th><th scope="col">Последний просмотренный блок</th></tr></thead>
+              <tbody id="pilot-report"></tbody>
+            </table>
+          </div>
+        </details>
       </article>
-      <article><h2>Цели пилота</h2><p>Не менее 100 платящих клиентов, конверсия 5–7%, повторная бронь не менее 30% за 2 недели, средний чек не ниже 700 ₽, чистота не ниже 4,5 из 5.</p></article>
+      <article><h2>Цели пилота</h2><p>Не менее 100 платящих клиентов, конверсия из переходов в бот в оплату 5–7%, повторная бронь не менее 30% за 2 недели, средний чек не ниже 700 ₽, чистота не ниже 4,5 из 5.</p></article>
       <article><h2>Материалы для защиты</h2><p><a class="quiet" href="https://www.canva.com/d/xo83vK4XGWdg7Co">Презентация ↗</a> · <a class="quiet" href="https://docs.google.com/document/d/18_EZQo6w82USb9HViiqUJIRO9OwNO_tz73DgFptD2i4/edit">Исследование ↗</a>. Для просмотра может потребоваться вход и доступ к файлам.</p></article>
     </div></section>
   </main>
