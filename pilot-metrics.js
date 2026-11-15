@@ -10,17 +10,20 @@
   if (dashboard) {
     const totals = read();
     for (const [variant, label] of [['plain', 'Без цены'], ['price', 'С ценами']]) {
-      const sample = totals[variant] ?? {};
-      const visits = sample.visits ?? 0;
-      const bookings = sample.bookings ?? 0;
-      const demos = sample.demos ?? 0;
+      const sample = totals[variant];
+      if (!sample?.visits) continue;
+      const { visits, bookings = 0, demos = 0, blocks = {} } = sample;
+      const blockSummary = Object.entries(blocks)
+        .filter(([, count]) => count > 0)
+        .map(([name, count]) => name + ' — ' + count)
+        .join(' · ');
+      const clickRate = Math.round(bookings / visits * 100) + '%';
       const row = dashboard.insertRow();
-      for (const value of [label, visits, bookings, visits ? Math.round(bookings / visits * 100) + '%' : '—', demos]) {
+      for (const value of [label, visits, bookings, clickRate, demos, blockSummary || 'Пока нет данных']) {
         row.insertCell().textContent = value;
       }
-      const blocks = Object.entries(sample.blocks ?? {}).map(([name, count]) => name + ' — ' + count);
-      document.querySelector('#blocks-' + variant).textContent = blocks.join(' · ') || 'Пока нет данных';
     }
+    document.querySelector('#pilot-preview').hidden = dashboard.rows.length === 0;
     return;
   }
 
