@@ -1,8 +1,8 @@
-const pilotHourPrice = 800;
+const pilotHourPrice = 799;
 const money = new Intl.NumberFormat('ru-RU', {
   style: 'currency', currency: 'RUB', maximumFractionDigits: 0,
 });
-const estimates = { hour: pilotHourPrice, split: pilotHourPrice / 2, monthly: pilotHourPrice * 4 };
+const estimates = { hour: pilotHourPrice, intro: 399 };
 for (const amount of document.querySelectorAll('[data-price]')) {
   amount.textContent = money.format(estimates[amount.dataset.price]);
 }
@@ -30,6 +30,6 @@ if (clubFee) {
     }
     const total = clubFee.valueAsNumber + 4 * (travel.valueAsNumber || 0);
     const minutes = time.value ? ' · ' + Math.round(time.valueAsNumber * 4) + ' мин на дорогу' : '';
-    comparison.textContent = 'Клуб: ' + money.format(total) + minutes + '. Зал на час: ориентир ' + money.format(estimates.monthly) + ' за четыре визита.';
+    comparison.textContent = 'Клуб: ' + money.format(total) + minutes + '. ParkFit: ' + money.format(pilotHourPrice * 4) + ' за четыре визита по обычной цене.';
   });
 }
