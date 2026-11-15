@@ -5,7 +5,7 @@
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   canvas.classList.add('tour-fallback');
-  const { width: roomWidth, depth: roomDepth, zones, equipment } = capsuleLayout;
+  const { width: roomWidth, depth: roomDepth, zones, equipment, descriptions } = capsuleLayout;
 
   const title = tour.querySelector('h2');
   const caption = tour.querySelector('.tour-caption');
@@ -14,8 +14,8 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const states = [
     ['ЗАГЛЯНИ', 'ВНУТРЬ.', 'Вход в капсулу. Прокрути, чтобы открыть дверь.'],
-    ['СИЛОВАЯ', 'ЗОНА.', 'Справа от входа — скамья и гантели.'],
-    ['ЗОНА', 'РАЗМИНКИ.', 'Слева от входа — коврик для разминки.'],
+    ['СИЛОВАЯ', 'ЗОНА.', descriptions.strength],
+    ['КАРДИО', 'И РАЗМИНКА.', descriptions.floor],
   ];
   const clamp = (value) => Math.max(0, Math.min(1, value));
   const mix = (a, b, t) => a + (b - a) * t;
@@ -137,23 +137,62 @@
   }
 
   function drawEquipment() {
-    const { bench, dumbbells, mat } = equipment;
+    const { rack, bench, dumbbells, bike, mat } = equipment;
     box(mat.x - mat.width / 2, .021, mat.z - mat.depth / 2, mat.width, .028, mat.depth, ['#626a44', '#7d8756', '#333b2c']);
+    const postXs = [-1, 1].map((side) => rack.x + side * (rack.width / 2 - .04));
+    const postZs = [-1, 1].map((side) => rack.z + side * (rack.depth / 2 - .036));
+    for (const x of postXs) {
+      box(x - .045, 0, rack.z - rack.depth / 2, .09, .06, rack.depth, frames);
+      box(x - .035, 2.11, rack.z - rack.depth / 2, .07, .07, rack.depth, frames);
+      for (const z of postZs) box(x - .036, 0, z - .036, .072, 2.14, .072, frames);
+    }
+    for (const z of postZs) box(rack.x - rack.width / 2, 2.11, z - .025, rack.width, .05, .05, steel);
+    const barZ = postZs[0] - .071;
+    box(rack.x - rack.width / 2 - .03, 1.135, barZ, rack.width + .06, .03, .025, steel);
+    for (const x of postXs) disk(x, 1.15, barZ, .145, upholstery[0]);
+    for (const x of [rack.x + .105, rack.x + .275]) {
+      box(x - .012, 1.30, postZs[0] - .012, .024, .84, .024, frames);
+      box(x - .05, 1.22, postZs[0] - .018, .10, .03, .036, steel);
+    }
+
     const benchStart = bench.z - bench.depth / 2;
     for (const z of [benchStart + .08, benchStart + bench.depth - .15]) {
       box(bench.x - .19, .035, z, .38, .07, .09, steel);
       box(bench.x - .03, .095, z, .06, .34, .08, frames);
     }
-    box(bench.x - bench.width / 2, .435, benchStart, bench.width, .085, bench.depth, upholstery);
+    box(bench.x - .16, .39, benchStart, .32, .072, .32, upholstery);
+    const benchEdges = [bench.x - .18, bench.x + .18];
+    polygon([[benchEdges[0], .44, bench.z - .17], [benchEdges[1], .44, bench.z - .17],
+      [benchEdges[1], .73, bench.z + .45], [benchEdges[0], .73, bench.z + .45]], upholstery[1]);
     const shelfLeft = dumbbells.x - dumbbells.width / 2;
     const shelfFront = dumbbells.z - dumbbells.depth / 2;
-    for (const y of [.30, .58]) {
+    for (const y of [.23, .47, .71]) {
       box(shelfLeft, y, shelfFront, dumbbells.width, .06, dumbbells.depth, steel);
       for (let i = 0; i < 3; i++) {
         const x = shelfLeft + .12 + i * .26;
         box(x, y + .06, shelfFront + .07, .19, .10, .16, frames);
       }
     }
+
+    for (const z of [bike.z - .39, bike.z + .39]) box(bike.x - .25, .03, z, .50, .053, .08, frames);
+    box(bike.x - .06, .073, bike.z - .39, .12, .075, .85, frames);
+    box(bike.x - .037, .17, bike.z - .23, .074, .67, .061, frames);
+    box(bike.x - .11, .81, bike.z - .32, .22, .06, .27, upholstery);
+    box(bike.x - .031, .25, bike.z + .22, .062, .83, .07, frames);
+    box(bike.x - .22, 1.055, bike.z + .20, .44, .05, .14, steel);
+    box(bike.x - .10, 1.10, bike.z + .27, .20, .12, .037, frames);
+    disk(bike.x - .08, .30, bike.z + .03, .218, upholstery[0]);
+    disk(bike.x - .083, .30, bike.z + .03, .159, frames[1]);
+    disk(bike.x + .08, .30, bike.z + .03, .218, upholstery[0]);
+    disk(bike.x + .083, .30, bike.z + .03, .159, frames[1]);
+  }
+
+  function disk(x, y, z, radius, color) {
+    const points = Array.from({ length: 16 }, (_, index) => {
+      const angle = index / 16 * 2 * Math.PI;
+      return [x, y + Math.cos(angle) * radius, z + Math.sin(angle) * radius];
+    });
+    polygon(points, color);
   }
 
   function entrance(open) {
@@ -221,11 +260,11 @@
     const pan = ease(.65, .92, progress);
     const open = scrolling ? ease(.08, .39, progress) : 1;
 
-    camera = { x: mix(-1.2, 0, walk) + .18 * pan, y: mix(1.56, 1.15, walk), z: mix(-5.6, .25, walk) };
-    const swing = mix(.105, -.18, walk) + .46 * pan;
+    camera = { x: mix(-1.2, 0, walk), y: mix(1.56, 1.15, walk), z: mix(-5.6, .13, walk) };
+    const swing = scrolling ? mix(.105, .20, walk) - .50 * pan : 0;
     yaw = { c: Math.cos(swing), s: Math.sin(swing) };
-    focal = Math.min(width * (width < 650 ? 1.36 : 1.08), height * 1.22);
-    centerX = width * (width < 650 ? .50 : .62);
+    focal = Math.min(width * (width < 650 ? 1.36 : 1.08), height * mix(1.22, .94, walk));
+    centerX = width * (width < 650 ? .50 : .42);
     centerY = height * ((width < 650 ? .41 : .49) - .12 * walk - .035 * pan);
     scene = [];
 
@@ -255,7 +294,7 @@
     if (state !== lastState || !scrolling) {
       lastState = state;
       const [first, second, copy] = state < 0
-        ? ['ВНУТРИ', 'КАПСУЛЫ.', 'Скамья и гантели справа, коврик для разминки слева.']
+        ? ['ВНУТРИ', 'КАПСУЛЫ.', descriptions.overview]
         : states[state];
       title.replaceChildren(first, document.createElement('br'), second);
       if (scrolling) {

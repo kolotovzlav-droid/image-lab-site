@@ -87,7 +87,7 @@ h2 { font-size: clamp(57px, 8.5vw, 121px); margin-top: 12px; }
 .zone { border: 1px dashed #78816e; border-radius: 3px; transition: background .32s; }
 .zone.is-active { background: #e3f565; }
 .fixture { border: 1px solid #3d4739; border-radius: 2px; background: #d7ddcd; }
-.rack { border-width: 2px; background: linear-gradient(#3d4739, #3d4739) center 88% / 100% 3px no-repeat; }
+.rack { border-width: 3px; background: linear-gradient(#3d4739, #3d4739) center 18% / 100% 3px no-repeat, #d7ddcd; }
 .bench { background: #666e5b; }
 .dumbbells { background: repeating-linear-gradient(90deg, #535c4e 0 2px, #d7ddcd 2px 5px); }
 .mat { background: repeating-linear-gradient(135deg, #d6decf 0 4px, #9ca78b 4px 5px); }

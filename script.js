@@ -1,12 +1,6 @@
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const format = new Map([
-  ['strength', 'Справа от входа — скамья и гантели.'],
-  ['floor', 'Слева от входа — коврик для разминки.'],
-  ['entry', 'Для входа введи код из бота на двери.'],
-]);
-
 const roomPlan = document.querySelector('.room');
-const { width: roomWidth, depth: roomDepth, zones, equipment } = capsuleLayout;
+const { width: roomWidth, depth: roomDepth, zones, equipment, descriptions } = capsuleLayout;
 roomPlan.style.aspectRatio = roomWidth + ' / ' + roomDepth;
 
 function placeOnPlan(element, { x, z, width, depth }) {
@@ -37,7 +31,7 @@ for (const button of zoneButtons) {
       choice.setAttribute('aria-pressed', String(active));
       document.querySelector('.zone-' + choice.dataset.zone).classList.toggle('is-active', active);
     }
-    zoneCopy.textContent = format.get(zone);
+    zoneCopy.textContent = descriptions[zone];
   });
 }
 
