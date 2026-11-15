@@ -7,12 +7,12 @@
   <meta name="description" content="ParkFit — отдельный зал на час рядом с домом. Капсула 8 м² для одного человека. Планируемая площадка пилота — ЖК «Зиларт», Москва.">
   <title>ParkFit — зал на час</title>
   <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="style.css?v=parkfit">
-  <script src="room-layout.js?v=parkfit" defer></script>
-  <script src="script.js?v=parkfit" defer></script>
+  <link rel="stylesheet" href="style.css?v=parkfit-layout">
+  <script src="room-layout.js?v=parkfit-layout" defer></script>
+  <script src="script.js?v=parkfit-layout" defer></script>
   <script src="price.js?v=parkfit" defer></script>
   <script src="pilot-metrics.js?v=parkfit" defer></script>
-  <script src="tour-entry.js?v=parkfit" type="module"></script>
+  <script src="tour-entry.js?v=parkfit-layout" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main">К содержанию</a>
@@ -63,20 +63,22 @@
       <div class="wrap section">
         <div class="format-heading">
           <div><h2 id="format-title">Что внутри</h2></div>
-          <p>Капсула 8 м² на одного человека. На схеме и в 3D-туре показан пример расстановки.</p>
+          <p>Капсула 8 м² на одного человека. Схема и 3D-тур показывают расстановку из презентации ParkFit.</p>
         </div>
         <ul class="equipment-list" aria-label="Планируемое оборудование">
-          <li>Скамья</li><li>Гантели</li><li>Коврик для разминки</li>
+          <li>Силовая рама со штангой и петлями TRX</li><li>Регулируемая скамья</li><li>Гантели 2–24 кг</li><li>Велотренажёр</li><li>Коврик для разминки</li>
         </ul>
         <div class="layout" id="plan">
           <div class="blueprint" aria-label="Условный план капсулы">
             <p class="plan-label">ВИД СВЕРХУ · СХЕМА КОНЦЕПЦИИ</p>
-            <div class="room" role="img" aria-label="Вход по центру нижней стены. Если смотреть от входа, скамья и гантели справа, коврик слева.">
+            <div class="room" role="img" aria-label="Вход снизу. Слева от входа силовая рама и скамья. У дальней стены гантели. Справа велотренажёр в глубине и коврик у входа.">
               <div class="zone zone-strength"></div>
               <div class="zone zone-floor"></div>
               <div class="zone zone-entry"></div>
+              <div class="fixture rack"></div>
               <div class="fixture bench"></div>
               <div class="fixture dumbbells"></div>
+              <div class="fixture bike"></div>
               <div class="fixture mat"></div>
               <div class="door"></div>
             </div>
@@ -86,9 +88,9 @@
 
           <div class="zones" aria-label="Зоны капсулы">
             <button class="zone-button" type="button" data-zone="strength" aria-pressed="true"><span class="zone-index">01</span>Силовая зона<span aria-hidden="true">↗</span></button>
-            <button class="zone-button" type="button" data-zone="floor" aria-pressed="false"><span class="zone-index">02</span>Зона разминки<span aria-hidden="true">↗</span></button>
+            <button class="zone-button" type="button" data-zone="floor" aria-pressed="false"><span class="zone-index">02</span>Кардио и разминка<span aria-hidden="true">↗</span></button>
             <button class="zone-button" type="button" data-zone="entry" aria-pressed="false"><span class="zone-index">03</span>Вход<span aria-hidden="true">↗</span></button>
-            <p id="zone-copy" aria-live="polite">Справа от входа — скамья и гантели.</p>
+            <p id="zone-copy" aria-live="polite">Слева от входа — силовая рама с TRX и наклонной скамьёй. Стойка с гантелями — у дальней стены.</p>
           </div>
         </div>
       </div>

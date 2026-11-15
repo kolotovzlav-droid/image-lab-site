@@ -1,8 +1,8 @@
 import * as THREE from './vendor/three.module.min.js';
 
 export function startTour() {
-  const { width, depth, zones, equipment } = capsuleLayout;
-  const { bench, dumbbells, mat: matPlan } = equipment;
+  const { width, depth, zones, equipment, descriptions } = capsuleLayout;
+  const { rack, bench, dumbbells, bike, mat: matPlan } = equipment;
   const tour = document.querySelector('#tour');
   const stage = tour.querySelector('.tour-stage');
   const canvas = tour.querySelector('canvas');
@@ -131,7 +131,7 @@ export function startTour() {
   light(-4.3, 5.5, -5.8, 0xe0eeff, 155, [0, 1.1, 0]);
   light(.8, 2.72, .72, 0xf8f5db, 24, [bench.x, .35, bench.z], true);
   light(-.8, 2.71, depth - .35, 0xe2eaff, 15, [0, .9, 1.4]);
-  const warmupLight = light(.85, 2.73, 2.3, 0xe9ffab, 8, [matPlan.x, .1, matPlan.z]);
+  const cardioLight = light(-.83, 2.73, 2.14, 0xffe1b9, 8, [bike.x, .55, bike.z]);
 
   box(85, .17, 85, 0, -.205, 4, concrete, scene, false);
   light(-3.4, 6.8, -5.9, 0xdae7ef, 122, [0, -.10, 1.25], true);
@@ -175,21 +175,81 @@ export function startTour() {
   });
 
   box(zones.strength.width, .017, zones.strength.depth, zones.strength.x, .012, zones.strength.z, rubber);
-  for (const z of [bench.z - .50, bench.z + .49]) {
-    box(bench.width, .072, .087, bench.x, .055, z, frame);
-    box(.052, .36, .074, bench.x, .22, z, frame);
+  const rackTop = 2.14;
+  const rackPosts = [-1, 1].map((side) => rack.x + side * (rack.width / 2 - .04));
+  const rackEnds = [-1, 1].map((side) => rack.z + side * (rack.depth / 2 - .036));
+  for (const x of rackPosts) {
+    box(.095, .061, rack.depth, x, .031, rack.z, dark);
+    box(.072, .065, rack.depth, x, rackTop, rack.z, frame);
+    for (const z of rackEnds) {
+      box(.073, rackTop, .073, x, rackTop / 2, z, frame);
+      for (let y = .48; y < rackTop - .08; y += .085) {
+        box(.015, .019, .002, x, y, z - .037, dark, scene, false);
+      }
+    }
   }
-  box(.37, .075, bench.depth, bench.x, .45, bench.z, rubber);
-  box(.32, .021, bench.depth - .05, bench.x, .495, bench.z, rubber, scene, false);
-  for (const y of [.35, .72]) {
+  for (const z of rackEnds) rod(.024, rack.width, rack.x, rackTop, z, frame);
+  const barZ = rackEnds[0] - .071;
+  rod(.016, rack.width + .06, rack.x, 1.15, barZ, steel);
+  for (const side of [-1, 1]) {
+    const plateX = rack.x + side * (rack.width / 2 - .06);
+    rod(.145, .048, plateX, 1.15, barZ, rubber);
+    rod(.042, .06, plateX, 1.15, barZ, frame);
+    const strapX = rack.x + .19 + side * .085;
+    box(.021, .84, .013, strapX, 1.72, rackEnds[0], dark);
+    box(.023, .075, .017, strapX, 1.36, rackEnds[0], guide, scene, false);
+    mesh(new THREE.TorusGeometry(.052, .008, 7, 16), rubber, strapX, 1.26, rackEnds[0]);
+  }
+
+  for (const z of [bench.z - .45, bench.z + .35]) {
+    box(bench.width, .067, .087, bench.x, .046, z, frame);
+    box(.055, .32, .079, bench.x, .21, z, frame);
+  }
+  box(.075, .065, bench.depth - .12, bench.x, .35, bench.z, frame);
+  box(.32, .072, .32, bench.x, .426, bench.z - .35, rubber);
+  const backrest = box(.36, .076, .70, bench.x, .57, bench.z + .12, rubber);
+  backrest.rotation.x = -.46;
+  for (const y of [.23, .47, .71]) {
     box(dumbbells.width, .047, dumbbells.depth, dumbbells.x, y, dumbbells.z, frame);
     for (let i = 0; i < 3; i++) {
-      const x = dumbbells.x + (i - 1) * .265;
+      const x = dumbbells.x + (i - 1) * .30;
       rod(.017, .18, x, y + .096, dumbbells.z - .03, steel);
       for (const end of [-1, 1]) rod(.058 + i * .004, .044, x + end * .083, y + .097, dumbbells.z - .03, rubber, scene, 'x', 6);
     }
   }
   for (const x of [dumbbells.x - .39, dumbbells.x + .39]) box(.052, .75, .063, x, .39, dumbbells.z + .04, frame);
+  const cycle = new THREE.Group();
+  cycle.position.set(bike.x, 0, bike.z);
+  cycle.rotation.y = .20;
+  scene.add(cycle);
+  for (const z of [-.39, .39]) {
+    box(.50, .058, .077, 0, .041, z, frame, cycle);
+    for (const x of [-.244, .244]) box(.058, .066, .088, x, .039, z, rubber, cycle);
+  }
+  box(.093, .075, .85, 0, .096, 0, frame, cycle);
+  rod(.219, .19, 0, .29, .035, dark, cycle);
+  rod(.173, .205, 0, .29, .035, frame, cycle);
+  rod(.068, .221, 0, .29, .035, dark, cycle);
+  for (const side of [-1, 1]) {
+    const crank = box(.025, .16, .039, side * .12, .29 + side * .058, .035, frame, cycle);
+    crank.rotation.x = .46;
+    box(.112, .030, .087, side * .168, .29 + side * .12, .032 + side * .036, rubber, cycle);
+  }
+  const seatPost = box(.054, .65, .061, 0, .51, -.18, frame, cycle);
+  seatPost.rotation.x = -.12;
+  box(.23, .062, .27, 0, .85, -.23, rubber, cycle);
+  const handlePost = box(.065, .80, .063, 0, .68, .23, frame, cycle);
+  handlePost.rotation.x = .13;
+  rod(.021, .43, 0, 1.075, .28, frame, cycle);
+  for (const x of [-.205, .205]) {
+    const grip = box(.04, .038, .19, x, 1.08, .24, rubber, cycle);
+    grip.rotation.y = x;
+  }
+  const display = box(.23, .125, .028, 0, 1.17, .295, frame, cycle);
+  display.rotation.x = .37;
+  const screen = box(.189, .079, .004, 0, 1.17, .278, dark, cycle, false);
+  screen.rotation.x = .37;
+
   const mat = surface(0x47594d, .91, 0, { bumpMap: grain, bumpScale: .008 });
   box(matPlan.width, .018, matPlan.depth, matPlan.x, .02, matPlan.z, mat);
   for (let offset = .04; offset < matPlan.depth; offset += .038) {
@@ -220,8 +280,8 @@ export function startTour() {
   const nav = document.querySelector('.nav');
   const states = [
     ['ЗАГЛЯНИ', 'ВНУТРЬ.', 'Вход в капсулу. Прокрути, чтобы открыть дверь.'],
-    ['СИЛОВАЯ', 'ЗОНА.', 'Справа от входа — скамья и гантели.'],
-    ['ЗОНА', 'РАЗМИНКИ.', 'Слева от входа — коврик для разминки.'],
+    ['СИЛОВАЯ', 'ЗОНА.', descriptions.strength],
+    ['КАРДИО', 'И РАЗМИНКА.', descriptions.floor],
   ];
   let displayed = -2;
   let frameRequest = 0;
@@ -241,23 +301,25 @@ export function startTour() {
     const open = THREE.MathUtils.smoothstep(progress, .065, .35);
     for (const { door, side } of doors) door.position.x = side * (doorWidth / 2 + open * doorWidth);
     const narrow = mobile.matches;
+    camera.fov = narrow ? 69 + 12 * approach : 43 + 15 * approach;
+    camera.updateProjectionMatrix();
     camera.position.set(
       THREE.MathUtils.lerp(narrow ? -1.3 : -2.35, 0, approach),
-      THREE.MathUtils.lerp(1.69, 1.40, approach),
-      THREE.MathUtils.lerp(narrow ? -5.9 : -4.85, .29, approach),
+      THREE.MathUtils.lerp(1.69, 1.37, approach),
+      THREE.MathUtils.lerp(narrow ? -5.9 : -4.85, .13, approach),
     );
     camera.lookAt(
-      THREE.MathUtils.lerp(narrow ? 0 : .55, bench.x, approach) + pan * 1.28,
-      THREE.MathUtils.lerp(1.36, .70, approach),
-      THREE.MathUtils.lerp(.70, 2.35, approach),
+      playing ? THREE.MathUtils.lerp(narrow ? 0 : .38, .46, approach) - pan * 1.06 : .03,
+      THREE.MathUtils.lerp(1.36, .81, approach),
+      THREE.MathUtils.lerp(.70, 2.22, approach),
     );
-    warmupLight.intensity = 8 + pan * 12;
+    cardioLight.intensity = 8 + pan * 12;
     renderer.render(scene, camera);
     const state = !playing ? -1 : progress < .43 ? 0 : progress < .76 ? 1 : 2;
     if (state !== displayed) {
       displayed = state;
       const [first, second, copy] = state < 0
-        ? ['ВНУТРИ', 'КАПСУЛЫ.', 'Скамья и гантели справа, коврик для разминки слева.']
+        ? ['ВНУТРИ', 'КАПСУЛЫ.', descriptions.overview]
         : states[state];
       title.replaceChildren(first, document.createElement('br'), second);
       caption.textContent = copy;
@@ -276,8 +338,6 @@ export function startTour() {
     renderer.setPixelRatio(Math.min(devicePixelRatio, mobile.matches ? 1.35 : 1.65));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
-    camera.fov = mobile.matches ? 69 : 43;
-    camera.updateProjectionMatrix();
     lastProgress = -1;
     queueRender();
   }
